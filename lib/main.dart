@@ -1,3 +1,5 @@
+import './widgets/chart.dart';
+
 import './widgets/transaction_list.dart';
 
 import './models/transaction.dart';
@@ -17,9 +19,30 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Personal Expenses',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        accentColor: Colors.amber,
+        fontFamily: 'Quicksand',
+        textTheme: ThemeData.light().textTheme.copyWith(
+          // ignore: deprecated_member_use
+          title: TextStyle(
+            fontFamily: 'Quicksand',
+            fontSize: 16,
+            fontWeight: FontWeight.bold
+          ) 
+        ),
+        appBarTheme: AppBarTheme(
+          textTheme: ThemeData.light().textTheme.copyWith(
+            // ignore: deprecated_member_use
+            title: TextStyle(
+              fontFamily: 'OpenSans',
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white
+            )
+          ),
+        ),
       ),
       home: MyHomePage(),
     );
@@ -37,9 +60,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   
   final List<Transaction> _userTransactions = [
-    Transaction(id: 't1', title: 'New Shoes', amount: 99.99, date: DateTime.now()),
-    Transaction(id: 't2', title: 'Something', amount: 78.29, date: DateTime.now()),
+    // Transaction(id: 't1', title: 'New Shoes', amount: 99.99, date: DateTime.now()),
+    // Transaction(id: 't2', title: 'Something', amount: 78.29, date: DateTime.now()),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _userTransactions.where((tx) {
+        
+        return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7),),);
+    }).toList();
+  }
 
   void _addNewTransaction(String txTitle, double txAmount){
     final newTx = Transaction(id: DateTime.now().toString(), title: txTitle, amount: txAmount, date: DateTime.now());
@@ -72,13 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            width: double.infinity,
-            child: Card(
-              color: Colors.blue,
-              child: Text('CHART here'),
-            ),
-          ),
+          Chart(_recentTransactions),
           
         TransactionList(_userTransactions),
         ],

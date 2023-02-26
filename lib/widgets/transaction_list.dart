@@ -1,4 +1,4 @@
-import 'package:expensetracker/models/transaction.dart';
+import '../models/transaction.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -14,7 +14,16 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      child: ListView.builder(
+      child: transactions.isEmpty ? Column(
+        children: [
+          Text('No transactions added yet!', style: Theme.of(context).textTheme.headline6,),
+          SizedBox(height: 20,),
+          Container(
+            height: 200,
+            child: Image.asset('assets/images/waiting.png',fit: BoxFit.cover,)
+          )
+        ],
+      ) : ListView.builder(
         itemBuilder: (context, index) {
           return Card(
             child: Row(
@@ -22,14 +31,14 @@ class TransactionList extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.purple, width: 1)),
+                      border: Border.all(color: Theme.of(context).primaryColor, width: 1)),
                   padding: EdgeInsets.all(8),
                   child: Text(
                     '\u{20B9} ${transactions[index].amount.toStringAsFixed(2)}',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                        color: Colors.purple),
+                        color: Theme.of(context).primaryColor),
                   ),
                 ),
                 Column(
@@ -37,8 +46,7 @@ class TransactionList extends StatelessWidget {
                   children: [
                     Text(
                       transactions[index].title,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.headline6
                     ),
                     Text(
                       DateFormat.yMMMd().format(transactions[index].date),
